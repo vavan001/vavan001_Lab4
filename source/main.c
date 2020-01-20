@@ -12,67 +12,71 @@
 #include "simAVRHeader.h"
 #endif
 
-enum States { start, s0, s0_b, s1, s1_b} state;
-
+enum States { start, s0, inc, dec} state;
 int main(void) {
 DDRA = 0x00; PORTA = 0xFF;
-	DDRB = 0xFF; PORTB = 0x01;
+	DDRC = 0xFF; PORTC = 0x07;
 	state = start;
 	while(1) {
 		tick();
 	};	
     return 1;
 }
+switch(state) {
+case start:
+case s0:
+case dec:
+case inc:
+default:
+break;
+	}
 void tick() {
 	switch(state) {
 case start:
-	state = s0;
+state = s0;
+	PORTC = 0x07;
 	break;
 case s0:
-  if((PINA & 0x01) == 0x01) {
-     state = s0_b;
-	} 
-          else {
-            state = s0;
-		}
-	break;
-case s0_b:
-	if((PINA & 0x01) == 0x01) {
-		state = s0_b;
+	if((PINA & 0x0F) == 0x01) {
+		state = inc;
+		if(PORTC < 9) PORTC++;
 			}
-         else {
-	  state = s1;
-		}
-	break;
-case s1:
-	if((PINA & 0x01) == 0x01) {
-	     state = s1_b;
-			}
-        else {
-	 state = s1;	
-		}
-	break;
-case s1_b:
-			
-      if((PINA & 0x01) == 0x01) {
-		state = s1_b;
+        else if((PINA & 0x0F) == 0x02){
+		state = dec;
+		if(PORTC != 0) PORTC--;
 			} 
-      else {
-	state = s0;
-	     }
-      break;
-	}
-switch(state) {
-
-case start:
-case s0: break;
-case s1_b:
-	PORTB = 0x01;
-		break;
-case s0_b: PORTB = 0x02;
-case s1: break;
-default:
+        else if((PINA & 0x0F) == 0x03){
+		state = s0;
+		PORTC = 0;
+			} 
+        else {
+		state = s0;
+			}
 			break;
+case inc:
+	if((PINA & 0x0F) == 0x01) {
+		state = inc;
+			} 
+        else if((PINA & 0x0F) == 0x00){
+		state = s0;
+			} 
+       else if((PINA & 0x0F) == 0x03) {
+		state = s0;
+		PORTC = 0;
+			}
+			break;
+case dec:
+	if((PINA & 0x0F) == 0x02) {
+		state = dec;
+			} 
+        else if((PINA & 0x00F) == 0x00){
+		state = s0;	
+			} 
+        else if((PINA & 0x0F) == 0x03){
+		state = s0;
+	        PORTC = 0;
+			}
+			break;
+		break;
 	}
 }
-

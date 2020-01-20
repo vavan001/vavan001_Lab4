@@ -39,42 +39,156 @@ expectPORTC 0
 checkResult
 
 # Add tests below
-test "PINA: 0x00 -> 0x01 -> 0x00 => PORTB: 0x01 -> 0x02 -> 0x02"
+test "PINA: 0x00 -> 0x01 -> 0x00 -> 0x01 => PORTC: 0x07 -> 0x08 -> 0x08 -> 0x09"
 setPINA 0x00
-set state = s0
+set state = start
 continue 2
-expectPORTB 0x01
+expectPORTC 0x07
 expect state s0
 
 setPINA 0x01
 continue 2
-expectPORTB 0x02
-expect state s0_b
+expectPORTC 0x08
+expect state inc
 
 setPINA 0x00
 continue 2
-expectPORTB 0x02
-expect state s1
-checkResult
-
-
-test "PINA: 0x00 -> 0x01 -> 0x00 => PORTB: 0x02 -> 0x01 -> 0x01"
-setPINA 0x00
-set state = s1
-continue 2
-expectPORTB 0x02
-expect state s1
+expectPORTC 0x08
+expect state s0
 
 setPINA 0x01
 continue 2
-expectPORTB 0x01
-expect state s1_b
+expectPORTC 0x09
+expect state inc
+checkResult
+
+test "PINA: 0x00 -> 0x01 x4 => PORTC: 0x07 -> 0x08 -> 0x09 -> 0x09"
+setPINA 0x00
+set state = start
+continue 2
+expectPORTC 0x07
+expect state s0
+
+setPINA 0x01
+continue 2
+setPINA 0x00
+continue 2
+setPINA 0x01
+continue 2
+setPINA 0x00
+continue 2
+setPINA 0x01
+continue 2
+
+expect state inc
+expectPORTC 0x09
+checkResult
+
+test "PINA: 0x00 -> 0x02 -> 0x00 => PORTC: 0x07 -> 0x06 -> 0x06"
+setPINA 0x00
+set state = start
+continue 2
+expectPORTC 0x07
+expect state s0
+
+setPINA 0x02
+continue 2
+expectPORTC 0x06
+expect state dec
 
 setPINA 0x00
 continue 2
-expectPORTB 0x01
+expectPORTC 0x06
 expect state s0
 checkResult
+
+test "PINA: 0x00 -> 0x02 -> 0x00 -> 0x02 .... => PORTC: 0x07 -> ... -> 0x00"
+setPINA 0x00
+set state = start
+continue 2
+expectPORTC 0x07
+expect state s0
+
+setPINA 0x02 #6
+continue 2
+setPINA 0x00
+continue 2
+
+setPINA 0x02 #5
+continue 2
+setPINA 0x00
+continue 2
+
+setPINA 0x02 #4
+continue 2
+setPINA 0x00
+continue 2
+
+setPINA 0x02 #3
+continue 2
+setPINA 0x00
+continue 2
+
+setPINA 0x02 #2
+continue 2
+setPINA 0x00
+continue 2
+
+setPINA 0x02 #1
+continue 2
+setPINA 0x00
+continue 2
+
+setPINA 0x02 #0
+continue 2
+setPINA 0x00
+continue 2
+
+setPINA 0x02 #0
+continue 2
+setPINA 0x00
+continue 2
+
+setPINA 0x02 #0
+continue 2
+setPINA 0x00
+continue 2
+
+expectPORTC 0x00
+expect state s0
+checkResult
+
+test "PINA: 0x00 -> 0x01 -> 0x00 -> 0x01 -> 0x02, PORTC: 0x07 -> 0x08 -> 0x09 -> 0x00"
+setPINA 0x00
+set state = start
+continue 2
+expectPORTC 0x07
+expect state s0
+
+setPINA 0x01
+continue 2
+setPINA 0x00
+continue
+setPINA 0x01
+continue 2
+setPINA 0x03
+continue 2
+
+expectPORTC 0x00
+expect state s0
+checkResult
+
+
+test "PINA: 0x03 -> PORTC: 0x00"
+setPINA 0x03
+set state = start
+continue 2
+expectPORTC 0x00
+expect state s0
+checkResult
+
+
+
 
 
 # Report on how many tests passed/tests ran
