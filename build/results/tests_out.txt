@@ -1,4 +1,4 @@
-Breakpoint 1 at 0x216: file source/main.c, line 93.
+Breakpoint 1 at 0x228: file source/main.c, line 82.
 Note: automatically using hardware breakpoints for read-only addresses.
 ======================================================
 Running all tests..."
@@ -6,6 +6,5 @@ Running all tests..."
 "PINA: 0x00, PINB: 0x00 => PORTC: 0"...
 	Expected 0 
 	PORTC '0x800028:	0x07
-"PINA: 0x00 -> 0x01 -> 0x00 -> 0x01 => PORTC: 0x07 -> 0x08 -> 0x08 -> 0x09"...test/tests.gdb:44: Error in sourced command file:
-No symbol "state" in current context.
+"PINA: 0x00 -> 0x01 -> 0x00 -> 0x01 => PORTC: 0x07 -> 0x08 -> 0x08 -> 0x09"..."PINA: 0x00 -> 0x01 x4 => PORTC: 0x07 -> 0x08 -> 0x09 -> 0x09"..."PINA: 0x00 -> 0x02 -> 0x00 => PORTC: 0x07 -> 0x06 -> 0x06"..."PINA: 0x00 -> 0x02 -> 0x00 -> 0x02 .... => PORTC: 0x07 -> ... -> 0x00"..."PINA: 0x00 -> 0x01 -> 0x00 -> 0x01 -> 0x02, PORTC: 0x07 -> 0x08 -> 0x09 -> 0x00"..."PINA: 0x03 -> PORTC: 0x00"...======================================================
 Quitting: Remote doesn't know how to detach
